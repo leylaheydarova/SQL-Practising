@@ -48,15 +48,53 @@ SELECT CompanyName FROM Customers
 WHERE Country = 'France'
 
 --Find the names of customers whose contact title is 'Owner':
+SELECT CompanyName FROM Customers
+WHERE ContactTitle = 'owner'
+
 --Find customers in Mexico:
+SELECT * FROM Customers
+WHERE Country = 'Mexico'
+
 --Retrieve all suppliers from the USA:
+SELECT * FROM Suppliers
+WHERE Country = 'USA'
+
 --Find all products with discontinued status:
+SELECT * FROM Products
+WHERE Discontinued = 1
+
 --Get the names and phone numbers of customers in London:
+SELECT ContactName, Phone FROM Customers
+WHERE City = 'London'
+
 --Select the products that need to be reordered (units on order greater than units in stock):
+SELECT * FROM Products
+WHERE UnitsInStock < UnitsOnOrder
+
 --Find all orders with a ship city of 'Paris':
+SELECT * FROM Orders
+WHERE Shipcity = 'Paris'
+
 --List all products that are not discontinued:
+SELECT * FROM Products
+WHERE Discontinued = 0
+
 --Get orders with a freight cost less than 50:
+SELECT * FROM Orders
+WHERE Freight < 50
+
 --Find products with a stock quantity of exactly 0:
+SELECT * FROM Products
+WHERE UnitsInStock = 0
+
 --Find orders placed on or after July 1, 1996:
+SELECT * FROM Orders
+WHERE OrderDate > '1996-01-01'
+
 --Get suppliers from Japan:
+SELECT * FROM Suppliers
+Where Country = 'Japan'
+
 --Find products supplied by supplier ID 1:
+SELECT * FROM Products
+WHERE SupplierID = 1
