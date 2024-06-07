@@ -224,3 +224,128 @@ JOIN [Order Details][OD]
 	ON O.OrderID = O.OrderID
 GROUP BY YEAR(O.OrderDate), CONCAT(E.FirstName, ' ', LastName)
 	HAVING ROUND(SUM(OD.UnitPrice*OD.Quantity*(1-OD.Discount)), 2) > 10000
+
+--Task 21: Total Sales by Product
+--Write a query to find the total sales amount for each product, showing only those products with total sales greater than $5000.
+SELECT 
+	P.ProductName,
+	ROUND(SUM(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) [TotalSales]
+FROM 
+	Products [P]
+JOIN
+	[Order Details] [OD]
+	ON
+		OD.ProductID = P.ProductID
+GROUP BY 
+	P.ProductName
+	HAVING 
+		ROUND(SUM(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) > 5000
+ORDER BY
+	TotalSales
+
+--Task 22: Total Orders by Ship Country
+--Write a query to count the number of orders shipped to each country, showing only those countries with more than 50 orders.
+SELECT 
+	ShipCountry,
+	COUNT(OrderID) [OrderCount]
+FROM
+	Orders
+GROUP BY 
+	ShipCountry
+	HAVING 
+		COUNT(OrderID) > 50
+ORDER BY
+	ShipCountry
+
+--Task 23: Total Freight by Year
+--Write a query to find the total freight charges for each year, showing only those years with total freight charges greater than $2000.
+SELECT 
+	YEAR(OrderDate),
+	SUM(Freight) [TotalFreight]
+FROM 
+	Orders
+GROUP BY 
+	YEAR(OrderDate)
+	HAVING 
+		SUM(Freight) > 2000
+
+--Task 24: Average Sales by Customer
+--Write a query to find the average sales amount for each customer, showing only those customers with an average sales amount greater than $100.
+SELECT 
+	C.ContactName,
+	ROUND(AVG(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) [AverageSale]
+FROM 
+	[Order Details] [OD]
+JOIN
+	Orders [O]
+	ON
+		O.OrderID = OD.OrderID
+JOIN 
+	Customers [C]
+	ON
+		O.CustomerID = C.CustomerID
+GROUP BY
+	C.ContactName
+	HAVING
+		ROUND(AVG(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) > 100
+ORDER BY C.ContactName
+
+--Task 25: Total Sales by Employee by Year
+--Write a query to find the total sales amount handled by each employee for each year, showing only those years with total sales greater than $2000 for any employee.
+SELECT 
+	YEAR(O.OrderDate) [Year], 
+	CONCAT(E.FirstName, ' ', E.LastName) [Employee],
+	ROUND(SUM(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) [TotalSale]
+FROM
+	[Order Details] [OD]
+JOIN 
+	Orders [O]
+	ON O.OrderID = OD.OrderID
+JOIN
+	Employees [E]
+	ON
+		O.EmployeeID = E.EmployeeID
+GROUP BY
+	YEAR(O.OrderDate), CONCAT(E.FirstName, ' ', E.LastName)
+	HAVING 
+		ROUND(SUM(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) > 2000
+ORDER BY 
+	Employee
+
+--Task 26: Average Freight by Shipper
+--Write a query to find the average freight charges handled by each shipper, showing only those shippers with an average freight charge greater than $50.
+SELECT 
+	ShipVia,
+	ROUND(AVG(Freight),2) [AverageFreightCharge]
+FROM
+	Orders
+GROUP BY 
+	ShipVia
+	HAVING
+		ROUND(AVG(Freight),2) > 50
+ORDER BY
+	ShipVia
+
+--Task 27: Total Products Supplied by Supplier
+--Write a query to find the total quantity of products supplied by each supplier, showing only those suppliers who have supplied more than 1000 units in total.
+
+--Task 28: Average Order Quantity by Customer
+--Write a query to find the average order quantity for each customer, showing only those customers with an average order quantity greater than 10.
+
+--Task 29: Total Orders by Employee by Year
+--Write a query to count the number of orders handled by each employee for each year, showing only those employees with more than 20 orders in any year.
+
+--Task 30: Total Sales by Region
+--Write a query to find the total sales amount for each region, showing only those regions with total sales greater than $50000.
+
+select * from Customers
+where CustomerID not in
+(
+select CustomerID from Orders
+)
+
+select * from Customers
+where Country in 
+(
+select Country from Suppliers
+)
