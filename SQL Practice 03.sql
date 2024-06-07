@@ -109,15 +109,37 @@ GROUP BY MONTH(OrderDate), YEAR(OrderDate)
 HAVING SUM(Freight*Quantity) > 10000
 ORDER BY Price
 
-SELECT * FROM Orders
-SELECT * FROM [Order Details]
 --Task 12: Average Order Value by Year
 --Write a query to find the average order value for each year, showing only those years with an average order value greater than $500.
-
+SELECT 
+	YEAR(O.OrderDate),
+	ROUND(AVG(OD.UnitPrice*OD.Quantity*(1-OD.Discount)), 2) [AverageValueOfOrder]
+FROM 
+	Orders [O]
+JOIN [Order Details] [OD]
+	ON O.OrderID = OD.OrderID
+GROUP BY 
+	YEAR(O.OrderDate)
+HAVING AVG(OD.UnitPrice*OD.Quantity*(1-OD.Discount)) > 500
 
 --Task 13: Total Quantity Sold by Year
 --Write a query to find the total quantity of products sold each year, showing only those years with total quantity sold greater than 1000 units.
-
+SELECT * FROM [Order Details]
+SELECT 
+	YEAR(O.OrderDate) [OrderYear],
+	OD.ProductID,
+	SUM(OD.Quantity) [TotalProductQuantity]
+FROM 
+	[Order Details] [OD]
+JOIN 
+	Orders [O]
+	ON 
+		O.OrderID = OD.OrderID
+GROUP BY 
+	YEAR(O.OrderDate), 
+	OD.ProductID
+HAVING SUM(OD.Quantity) > 100	
+ORDER BY ProductID
 
 --Task 14: Total Freight by Country
 --Write a query to find the total freight charges for each country, showing only those countries with total freight charges greater than $1000.
@@ -166,13 +188,39 @@ SELECT
 	SUM(Quantity)
 FROM [Order Details] od
 JOIN Products p
-ON od.ProductID = p.ProductID
+	ON od.ProductID = p.ProductID
 GROUP BY SupplierID
-HAVING SUM(Quantity) > 1000
+	HAVING SUM(Quantity) > 1000
 
 --Task 19: Average Discount by Year and Month
 --Write a query to find the average discount given each month of each year, showing only those months with an average discount greater than 5%.
-
+SELECT 
+	YEAR(O.OrderDate) [Year], 
+	MONTH(O.OrderDate) [Month],
+	ROUND(AVG(OD.Discount), 2) [AverageDiscount]
+FROM
+	[Order Details] [OD]
+JOIN
+	Orders [O]
+	ON
+		O.OrderID = OD.OrderID
+GROUP BY
+	YEAR(O.OrderDate), MONTH(O.OrderDate)
+	HAVING ROUND(AVG(OD.Discount), 2) > 0.05
 
 --Task 20: Total Sales by Employee and Year
 --Write a query to find the total sales amount handled by each employee for each year, showing only those employees with total sales greater than $10000 in any year.
+SELECT 
+	YEAR(O.OrderDate) [Year], 
+	CONCAT(E.FirstName, ' ', LastName) [Employee],
+	ROUND(SUM(OD.UnitPrice*OD.Quantity*(1-OD.Discount)), 2) [TotalSales]
+FROM 
+	Orders [O]
+JOIN
+	Employees [E]
+	ON
+		E.EmployeeID = O.EmployeeID
+JOIN [Order Details][OD]
+	ON O.OrderID = O.OrderID
+GROUP BY YEAR(O.OrderDate), CONCAT(E.FirstName, ' ', LastName)
+	HAVING ROUND(SUM(OD.UnitPrice*OD.Quantity*(1-OD.Discount)), 2) > 10000

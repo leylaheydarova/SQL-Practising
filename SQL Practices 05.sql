@@ -241,8 +241,39 @@ ORDER BY
 --21. Task: Retrieve Basic Customer Order Information
 --Objective: Write a query to retrieve a list of all customers and their most recent order details, including the customer name, order ID, order date, 
 --and total order amount. Sort the results by customer name.
-
-
+SELECT 
+	C.ContactName,
+	O.OrderID,
+	O.OrderDate,
+	ROUND(SUM(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) [TotalOrderAmount]
+FROM 
+	Customers [C]
+JOIN Orders [O]
+	ON C.CustomerID = O.CustomerID
+JOIN
+	[Order Details] [OD]
+	ON O.OrderID = OD.OrderID
+GROUP BY C.ContactName,
+	O.OrderID,
+	O.OrderDate
+ORDER BY C.ContactName
 --22.Task: Retrieve Supplier and Product Order Information
 --Objective: Write a query to retrieve a list of suppliers and their products, along with the total number of orders and total sales amount for each product. 
 --Sort the results by supplier name and then by total sales amount in descending order.
+SELECT 
+	S.ContactName,
+	P.ProductName,
+	COUNT(O.OrderID) [TotalOrdercount],
+	ROUND(SUM(OD.Quantity*OD.UnitPrice*(1-OD.Discount)), 2) [TotalOrderSales]
+FROM 
+	Products [P]
+JOIN Suppliers [S]
+	ON S.SupplierID = P.SupplierID
+JOIN [Order Details] [OD]
+	ON OD.ProductID = P.ProductID
+JOIN Orders [O]
+	ON O.OrderID = OD.OrderID
+GROUP BY 
+	S.ContactName,
+	P.ProductName
+ORDER BY TotalOrderSales DESC
