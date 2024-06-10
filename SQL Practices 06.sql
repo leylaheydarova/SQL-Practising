@@ -68,3 +68,52 @@ WHERE
 			WHERE CategoryName = 'Confections'
 		)
 	)
+
+
+--5. Retrieve a list of products along with the name of the category they belong to.
+SELECT ProductName,
+(
+	SELECT 
+		CategoryName 
+	FROM 
+		Categories
+	WHERE 
+		Categories.CategoryID = Products.CategoryID
+	) AS [ProductName]
+FROM 
+	Products
+
+--6. Find orders that include products from the category "Beverages".
+SELECT *
+FROM
+	[Order Details]
+WHERE 
+	ProductID IN
+(
+	
+)
+	
+
+--7. Retrieve categories that have more than 10 products.
+
+--8. Find the names of products supplied by "Exotic Liquids".
+
+--9. Retrieve orders with the maximum freight cost.
+
+--10. Find customers whose average order value is less than $100.
+
+--11. Retrieve employees who have handled less than 3 orders.
+
+--12. List customers who have placed orders with a total amount greater than $5000.
+
+--13. Find employees who have handled orders with a total greater than $20,000.
+
+--14. Retrieve the list of customers who have never placed an order.
+
+--15. List products that have a unit price higher than the average unit price of all products.
+
+--16. Find products from categories where the total stock of all products is less than 200 units.
+
+--17. Retrieve orders where the freight cost is greater than the average freight cost.
+
+--18. List suppliers who supply more than 20 different products.
